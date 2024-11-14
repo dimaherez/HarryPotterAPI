@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HarryPotterProject</string>
+    <string name="title_spells">Spells</string>
+    <string name="title_characters">Characters</string>
+    <string name="title_houses">Houses</string>
+    <string name="spells_string">Spells</string>
+    <string name="all_characters">All Characters</string>
+</resources>

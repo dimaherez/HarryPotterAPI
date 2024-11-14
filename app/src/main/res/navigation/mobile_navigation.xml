@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_spells">
+
+    <fragment
+        android:id="@+id/navigation_spells"
+        android:name="com.example.harrypotterproject.ui.spells.SpellsFragment"
+        android:label="@string/title_spells"
+        tools:layout="@layout/fragment_spells" />
+
+    <fragment
+        android:id="@+id/navigation_characters"
+        android:name="com.example.harrypotterproject.ui.characters.CharactersFragment"
+        android:label="@string/title_characters"
+        tools:layout="@layout/fragment_characters" />
+
+    <fragment
+        android:id="@+id/navigation_houses"
+        android:name="com.example.harrypotterproject.ui.houses.HousesFragment"
+        android:label="@string/title_houses"
+        tools:layout="@layout/fragment_houses">
+        <action android:id="@+id/action_houses_to_housecharacters"
+            app:destination="@id/navigation_house_characters" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_house_characters"
+        android:name="com.example.harrypotterproject.ui.houseCharacters.HouseCharactersFragment"
+        tools:layout="@layout/fragment_characters" />
+</navigation>
