@@ -1,4 +1,4 @@
-package com.example.harrypotterproject.details
+package com.example.harrypotterproject.ui.characters
 
 import android.content.Context
 import android.os.Bundle
@@ -41,7 +41,10 @@ class CharacterDetailsDialogFragment : DialogFragment() {
     }
 
     private fun setImageFromUrl(imageView: ImageView, imageUrl: String, context: Context) =
-        Glide.with(context).load(imageUrl).placeholder(R.drawable.wizard_placeholder).into(imageView)
+        Glide.with(context)
+            .load(imageUrl)
+            .placeholder(R.drawable.wizard_placeholder)
+            .into(imageView)
 
     override fun onDestroyView() {
         super.onDestroyView()

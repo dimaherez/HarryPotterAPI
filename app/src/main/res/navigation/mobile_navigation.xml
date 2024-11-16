@@ -19,15 +19,9 @@
 
     <fragment
         android:id="@+id/navigation_houses"
-        android:name="com.example.harrypotterproject.ui.houses.HousesFragment"
+        android:name="com.example.harrypotterproject.ui.houseCharacters.HousesFragment"
         android:label="@string/title_houses"
         tools:layout="@layout/fragment_houses">
-        <action android:id="@+id/action_houses_to_housecharacters"
-            app:destination="@id/navigation_house_characters" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_house_characters"
-        android:name="com.example.harrypotterproject.ui.houseCharacters.HouseCharactersFragment"
-        tools:layout="@layout/fragment_characters" />
 </navigation>

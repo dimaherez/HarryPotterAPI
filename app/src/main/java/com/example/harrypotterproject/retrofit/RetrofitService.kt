@@ -12,4 +12,7 @@ interface RetrofitService {
 
     @GET("spells")
     suspend fun getSpells(): Response<List<SpellModel>>
+
+    @GET("characters/house/{houseName}")
+    suspend fun getCharactersByHouse(@Path("houseName") houseName: String): Response<List<CharacterModel>>
 }

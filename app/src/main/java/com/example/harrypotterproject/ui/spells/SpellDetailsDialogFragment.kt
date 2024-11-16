@@ -1,4 +1,4 @@
-package com.example.harrypotterproject.details
+package com.example.harrypotterproject.ui.spells
 
 import android.content.Context
 import android.os.Bundle

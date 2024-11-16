@@ -8,18 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.harrypotterproject.clicklisteners.OnSpellClickListener
 import com.example.harrypotterproject.databinding.FragmentSpellsBinding
-import com.example.harrypotterproject.details.SpellDetailsDialogFragment
 import com.example.harrypotterproject.models.SpellModel
-import com.example.harrypotterproject.recycleview.OnSpellClickListener
 import com.example.harrypotterproject.recycleview.SpellsRvAdapter
 
-class SpellsFragment : Fragment() {
+class SpellsFragment : Fragment(), OnSpellClickListener {
 
     private var _binding: FragmentSpellsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -42,9 +38,7 @@ class SpellsFragment : Fragment() {
 
         val spellsRV: RecyclerView = binding.spellsRecyclerView
         spellsRV.layoutManager = LinearLayoutManager(requireContext())
-        val spellsRvAdapter = SpellsRvAdapter(clickListener = OnSpellClickListener {
-            showSpellDetails(it)
-        })
+        val spellsRvAdapter = SpellsRvAdapter(clickListener = this)
         spellsRV.adapter = spellsRvAdapter
 
         spellsViewModel.spellsList.observe(viewLifecycleOwner) { spellsList ->
@@ -54,12 +48,16 @@ class SpellsFragment : Fragment() {
     }
 
     private fun showSpellDetails(spell: SpellModel) {
-        val dialog = SpellDetailsDialogFragment.newInstance(spell)
-        dialog.show(parentFragmentManager, "SpellDetailsDialogFragment")
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(spell: SpellModel) {
+        val dialog = SpellDetailsDialogFragment.newInstance(spell)
+        dialog.show(parentFragmentManager, "SpellDetailsDialogFragment")
     }
 }

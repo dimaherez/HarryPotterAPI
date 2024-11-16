@@ -10,6 +10,6 @@ object HPRepository {
 
     suspend fun getSpells(): Response<List<SpellModel>> = RetrofitInstance.api.getSpells()
 
-
+    suspend fun getCharactersByHouse(houseName: String): Response<List<CharacterModel>> = RetrofitInstance.api.getCharactersByHouse(houseName)
 
 }

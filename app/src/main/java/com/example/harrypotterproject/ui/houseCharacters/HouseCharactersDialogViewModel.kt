@@ -8,7 +8,7 @@ import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.retrofit.HPRepository
 import kotlinx.coroutines.launch
 
-class SharedViewModel : ViewModel() {
+class HouseCharactersDialogViewModel : ViewModel() {
     val charactersList = MutableLiveData<List<CharacterModel>>()
 
     private val _selectedHouse = MutableLiveData<String>()
@@ -27,9 +27,8 @@ class SharedViewModel : ViewModel() {
 
             if (response.isSuccessful) {
                 charactersList.postValue(
-                    responseBody.filter {
-                        it.house.lowercase() == selectedHouse.value!!.lowercase()
-                    })
+                    responseBody.filter { it.house.lowercase() == _selectedHouse.value?.lowercase() }
+                )
             }
 
         }

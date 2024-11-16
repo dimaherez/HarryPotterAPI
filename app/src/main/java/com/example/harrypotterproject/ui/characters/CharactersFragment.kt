@@ -9,20 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.harrypotterproject.R
+import com.example.harrypotterproject.clicklisteners.OnCharacterClickListener
 import com.example.harrypotterproject.databinding.FragmentCharactersBinding
-import com.example.harrypotterproject.details.CharacterDetailsDialogFragment
 import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.recycleview.CharactersRvAdapter
-import com.example.harrypotterproject.recycleview.OnCharacterClickListener
-import com.example.harrypotterproject.room.AppDatabase
-import com.example.harrypotterproject.room.DatabaseRepo
 
-class CharactersFragment : Fragment() {
+class CharactersFragment : Fragment(), OnCharacterClickListener {
 
     private var _binding: FragmentCharactersBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -31,47 +25,38 @@ class CharactersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCharactersBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val characterDao = AppDatabase.getDatabase(requireContext()).characterDao()
-        val databaseRepository = DatabaseRepo(characterDao)
-
-        val viewModelFactory = CharactersViewModelFactory(databaseRepository)
+        val viewModelFactory = CharactersViewModelFactory(context = requireContext())
         val charactersViewModel = ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
 
         val recyclerView: RecyclerView = view.findViewById(R.id.charactersRecycleView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // 2 columns in the grid
-        val adapter = CharactersRvAdapter(clickListener = OnCharacterClickListener {
-            showCharacterDetails(it)
-        })
+        val adapter = CharactersRvAdapter(clickListener = this)
         recyclerView.adapter = adapter
 
-        charactersViewModel.allCharacters.observe(viewLifecycleOwner) { allCharacters ->
+        charactersViewModel.characters.observe(viewLifecycleOwner) { allCharacters ->
             adapter.charactersList = allCharacters
             adapter.notifyDataSetChanged()
         }
-
-
-
-
-        charactersViewModel.refreshCharacters()
-
     }
 
-    private fun showCharacterDetails(character: CharacterModel) {
+    override fun onCharacterClick(character: CharacterModel) {
         val dialog = CharacterDetailsDialogFragment.newInstance(character)
-        dialog.show(parentFragmentManager, "CharacterDetailsDialogFragment")
+        dialog.show(childFragmentManager, "CharacterDetailsDialogFragment")
+    }
+
+    override fun onEditClick(character: CharacterModel) {
+        TODO("Edit character dialog fragment")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

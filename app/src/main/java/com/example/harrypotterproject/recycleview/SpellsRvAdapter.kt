@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.harrypotterproject.R
-import com.example.harrypotterproject.details.CharacterDetailsDialogFragment
-import com.example.harrypotterproject.details.SpellDetailsDialogFragment
-import com.example.harrypotterproject.models.CharacterModel
+import com.example.harrypotterproject.clicklisteners.OnSpellClickListener
 import com.example.harrypotterproject.models.SpellModel
 
 class SpellsRvAdapter(
@@ -46,7 +44,5 @@ class SpellsRvAdapter(
     }
 }
 
-class OnSpellClickListener(val clickListener: (spell: SpellModel) -> Unit) {
-    fun onClick(spell: SpellModel) = clickListener(spell)
-}
+
 
