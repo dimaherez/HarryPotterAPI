@@ -1,14 +1,10 @@
 package com.example.harrypotterproject.ui.spells
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
-import com.example.harrypotterproject.R
 import com.example.harrypotterproject.databinding.SpellInfoDialogBinding
 import com.example.harrypotterproject.models.SpellModel
 import com.google.gson.Gson
@@ -38,9 +34,6 @@ class SpellDetailsDialogFragment: DialogFragment() {
         }
 
     }
-
-    private fun setImageFromUrl(imageView: ImageView, imageUrl: String, context: Context) =
-        Glide.with(context).load(imageUrl).placeholder(R.drawable.wizard_placeholder).into(imageView)
 
     override fun onDestroyView() {
         super.onDestroyView()

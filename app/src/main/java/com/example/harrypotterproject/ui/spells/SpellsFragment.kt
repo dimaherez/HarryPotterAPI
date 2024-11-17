@@ -47,10 +47,6 @@ class SpellsFragment : Fragment(), OnSpellClickListener {
         }
     }
 
-    private fun showSpellDetails(spell: SpellModel) {
-
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

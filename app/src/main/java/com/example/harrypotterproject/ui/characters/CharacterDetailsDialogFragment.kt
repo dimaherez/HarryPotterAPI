@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.harrypotterproject.R
 import com.example.harrypotterproject.databinding.CharacterInfoDialogBinding
 import com.example.harrypotterproject.models.CharacterModel
-import com.example.harrypotterproject.ui.spells.SpellsViewModel
 import com.google.gson.Gson
 
 class CharacterDetailsDialogFragment : DialogFragment() {

@@ -7,7 +7,6 @@ import android.widget.ImageView
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.harrypotterproject.R
 import com.example.harrypotterproject.clicklisteners.OnCharacterClickListener
 import com.example.harrypotterproject.databinding.CharactersRvItemBinding

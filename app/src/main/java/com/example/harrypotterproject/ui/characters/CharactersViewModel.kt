@@ -12,7 +12,6 @@ import com.example.harrypotterproject.retrofit.HPRepository
 import com.example.harrypotterproject.room.AppDatabase
 import com.example.harrypotterproject.room.DatabaseRepo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

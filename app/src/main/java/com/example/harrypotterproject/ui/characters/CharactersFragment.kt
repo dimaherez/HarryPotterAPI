@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.harrypotterproject.R
@@ -18,10 +15,6 @@ import com.example.harrypotterproject.databinding.FragmentCharactersBinding
 import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.models.SpellModel
 import com.example.harrypotterproject.recycleview.CharactersRvAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class CharactersFragment : Fragment(), OnCharacterClickListener {
 
