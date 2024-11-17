@@ -2,10 +2,12 @@ package com.example.harrypotterproject.clicklisteners
 
 import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.models.SpellModel
+import com.example.harrypotterproject.recycleview.CharactersRvAdapter
 
 interface OnCharacterClickListener {
-    fun onCharacterClick(character: CharacterModel)
-    fun onEditClick(character: CharacterModel)
+    fun onInfoButtonClick(character: CharacterModel)
+    fun onTeachSpellClick(characters: List<CharacterModel>, spells: List<SpellModel>)
+    fun onSelectAllClick(adapter: CharactersRvAdapter)
 }
 
 interface OnSpellClickListener {

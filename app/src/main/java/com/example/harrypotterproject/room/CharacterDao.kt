@@ -1,17 +1,17 @@
 package com.example.harrypotterproject.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.harrypotterproject.models.CharacterModel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharacterDao {
     @Query("SELECT * FROM CharacterModel")
-    fun getAllCharacters(): LiveData<List<CharacterModel>>
+    fun getAllCharactersFlow(): Flow<List<CharacterModel>>
 
     @Query("SELECT * FROM CharacterModel")
     suspend fun getAllCharactersList(): List<CharacterModel>  // Blocking call

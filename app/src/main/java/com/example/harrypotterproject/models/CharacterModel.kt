@@ -21,7 +21,7 @@ data class CharacterModel(
     val hairColour: String,
     val hogwartsStaff: Boolean,
     val hogwartsStudent: Boolean,
-    val house: String,
+    var house: String,
     val image: String,
     val name: String,
     val patronus: String,
@@ -30,7 +30,7 @@ data class CharacterModel(
     val wizard: Boolean,
     val yearOfBirth: Int,
     @ColumnInfo(name = "knownSpells", defaultValue = "")
-    val knownSpells: List<SpellModel>?
+    var knownSpells: MutableList<SpellModel>?,
 ) {
     data class Wand(
         val core: String?,
@@ -47,9 +47,10 @@ data class CharacterModel(
             |Character Details:
             |------------------
             |  Name: $name
-            |  Alternate Names: ${alternate_names.joinToString(", ")}
-            |  House: $house
             |  Known Spells: ${knownSpells?.joinToString(", ") { it.name } ?: ""}
+            |  House: $house
+            |  
+            |  Alternate Names: ${alternate_names.joinToString(", ")}
             |  Actor: $actor
             |  Alternate Actors: ${alternate_actors.joinToString(", ")}
             |  Alive: ${if (alive) "Yes" else "No"}
