@@ -78,7 +78,6 @@ class CharactersRvAdapter(
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = CharactersRvItemBinding.inflate(inflater, parent, false)

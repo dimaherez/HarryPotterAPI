@@ -1,6 +1,7 @@
 package com.example.harrypotterproject.ui.characters
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,18 +11,15 @@ import com.example.harrypotterproject.models.SpellModel
 import com.example.harrypotterproject.retrofit.HPRepository
 import com.example.harrypotterproject.room.AppDatabase
 import com.example.harrypotterproject.room.DatabaseRepo
-import com.example.harrypotterproject.ui.spells.SpellsViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CharactersViewModel(private val dbRepo: DatabaseRepo) : ViewModel() {
 
-    private val _characters = MutableStateFlow<List<CharacterModel>>(emptyList())
-    val characters: StateFlow<List<CharacterModel>> get() = _characters
+    private val _characters = MutableLiveData<List<CharacterModel>>()
+    val characters: LiveData<List<CharacterModel>> get() = _characters
 
     val spellsList = MutableLiveData<List<SpellModel>>()
 
@@ -30,11 +28,11 @@ class CharactersViewModel(private val dbRepo: DatabaseRepo) : ViewModel() {
         getSpells()
     }
 
-    private fun getCharacters() {
+    fun getCharacters() {
         viewModelScope.launch {
-            val localData = dbRepo.getAllCharactersFlow().firstOrNull()
+            val localData = dbRepo.getAllCharactersList()
 
-            if (localData.isNullOrEmpty()) {
+            if (localData.isEmpty()) {
                 val response = withContext(Dispatchers.IO) {
                     HPRepository.getCharacters()
                 }
@@ -44,15 +42,13 @@ class CharactersViewModel(private val dbRepo: DatabaseRepo) : ViewModel() {
                     withContext(Dispatchers.IO) {
                         dbRepo.insertAll(responseBody)
                     }
-                    dbRepo.getAllCharactersFlow().collect { characters ->
-                        _characters.value = characters
-                    }
+                    _characters.postValue(dbRepo.getAllCharactersLiveData().value)
                 } else {
                     // Handle error case
-                    _characters.value = emptyList()
+                    _characters.postValue(emptyList())
                 }
             } else {
-                _characters.value = localData
+                _characters.postValue(localData)
             }
         }
     }
@@ -72,15 +68,6 @@ class CharactersViewModel(private val dbRepo: DatabaseRepo) : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 dbRepo.updateAll(characters)
-            }
-        }
-    }
-
-    fun changeHouse(character: CharacterModel, newHouse: String) {
-        character.house = newHouse
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                dbRepo.updateCharacter(character)
             }
         }
     }

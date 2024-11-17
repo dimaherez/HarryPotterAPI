@@ -18,6 +18,9 @@ import com.example.harrypotterproject.databinding.FragmentCharactersBinding
 import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.models.SpellModel
 import com.example.harrypotterproject.recycleview.CharactersRvAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class CharactersFragment : Fragment(), OnCharacterClickListener {
@@ -25,7 +28,13 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var charactersViewModel: CharactersViewModel
+    companion object {
+        lateinit var charactersViewModel: CharactersViewModel
+        fun refreshData() {
+            charactersViewModel.getCharacters()
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +48,7 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val viewModelFactory = CharactersViewModelFactory(context = requireContext())
         charactersViewModel =
             ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
@@ -48,21 +58,16 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
         val adapter = CharactersRvAdapter(clickListener = this)
         recyclerView.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                charactersViewModel.characters.collect { allCharacters ->
-                    adapter.charactersList = allCharacters
-                    adapter.notifyDataSetChanged()
-                }
-            }
+        charactersViewModel.characters.observe(viewLifecycleOwner) { allCharacters ->
+            adapter.charactersList = allCharacters
+            adapter.notifyDataSetChanged()
         }
 
         adapter.selectedCharactersLiveData.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.teachSpellButton.visibility = View.GONE
                 binding.selectAllButton.visibility = View.GONE
-            }
-            else {
+            } else {
                 binding.teachSpellButton.visibility = View.VISIBLE
                 binding.selectAllButton.visibility = View.VISIBLE
             }
@@ -94,7 +99,11 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
             else it.knownSpells!!.add(randomSpell)
         }
         charactersViewModel.teachSpells(characters)
-        Toast.makeText(requireContext(), "Selected characters know '${randomSpell.name}' spell now!", Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            "Selected characters know '${randomSpell.name}' spell now!",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onSelectAllClick(adapter: CharactersRvAdapter) {

@@ -25,7 +25,20 @@ class HouseCharactersDialogFragment : DialogFragment(), OnCharacterClickListener
     private var _binding: FragmentHouseCharactersBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var houseCharactersDialogViewModel: HouseCharactersDialogViewModel
+    companion object {
+        fun newInstance(houseName: String): HouseCharactersDialogFragment {
+            val args = Bundle().apply { putString(HOUSE_NAME_KEY, houseName) }
+            val fragment = HouseCharactersDialogFragment()
+            fragment.arguments = args
+            Log.d("MyLog", "Instance Created")
+            return fragment
+        }
+
+        lateinit var houseCharactersDialogViewModel: HouseCharactersDialogViewModel
+        fun refreshData() {
+            houseCharactersDialogViewModel.getCharacters()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,13 +97,5 @@ class HouseCharactersDialogFragment : DialogFragment(), OnCharacterClickListener
         TODO("Not yet implemented")
     }
 
-    companion object {
-        fun newInstance(houseName: String): HouseCharactersDialogFragment {
-            val args = Bundle().apply { putString(HOUSE_NAME_KEY, houseName) }
-            val fragment = HouseCharactersDialogFragment()
-            fragment.arguments = args
-            Log.d("MyLog", "Instance Created")
-            return fragment
-        }
-    }
+
 }

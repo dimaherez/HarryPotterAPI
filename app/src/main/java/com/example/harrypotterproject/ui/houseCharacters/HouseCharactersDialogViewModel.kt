@@ -24,7 +24,7 @@ class HouseCharactersDialogViewModel(private val dbRepo: DatabaseRepo) : ViewMod
         getCharacters()
     }
 
-    private fun getCharacters() {
+    fun getCharacters() {
         viewModelScope.launch {
             charactersList.postValue(
                 dbRepo.getAllCharactersList()

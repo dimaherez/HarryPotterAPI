@@ -1,5 +1,6 @@
 package com.example.harrypotterproject.room
 
+import androidx.lifecycle.LiveData
 import com.example.harrypotterproject.models.CharacterModel
 import kotlinx.coroutines.flow.Flow
 
@@ -8,8 +9,8 @@ class DatabaseRepo(private val characterDao: CharacterDao) {
         return characterDao.getAllCharactersList()
     }
 
-    fun getAllCharactersFlow(): Flow<List<CharacterModel>> {
-        return characterDao.getAllCharactersFlow()
+    fun getAllCharactersLiveData(): LiveData<List<CharacterModel>> {
+        return characterDao.getAllCharactersLiveData()
     }
 
     suspend fun insertAll(characters: List<CharacterModel>) {
