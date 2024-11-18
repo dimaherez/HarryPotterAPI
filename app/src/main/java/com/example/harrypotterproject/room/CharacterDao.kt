@@ -17,6 +17,9 @@ interface CharacterDao {
     @Query("SELECT * FROM CharacterModel")
     suspend fun getAllCharactersList(): List<CharacterModel>  // Blocking call
 
+    @Query("SELECT * FROM CharacterModel WHERE id= :id")
+    fun getCharacterById(id: String): CharacterModel
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacter(character: CharacterModel)
 
@@ -25,6 +28,8 @@ interface CharacterDao {
 
     @Update
     suspend fun updateCharacter(character: CharacterModel)
+
+
 }
 
 

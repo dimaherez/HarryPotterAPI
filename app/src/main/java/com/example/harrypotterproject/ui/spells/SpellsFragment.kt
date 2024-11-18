@@ -12,6 +12,8 @@ import com.example.harrypotterproject.clicklisteners.OnSpellClickListener
 import com.example.harrypotterproject.databinding.FragmentSpellsBinding
 import com.example.harrypotterproject.models.SpellModel
 import com.example.harrypotterproject.recycleview.SpellsRvAdapter
+import com.example.harrypotterproject.ui.viewmodel.HPViewModel
+import com.example.harrypotterproject.ui.viewmodel.HPViewModelFactory
 
 class SpellsFragment : Fragment(), OnSpellClickListener {
 
@@ -33,15 +35,16 @@ class SpellsFragment : Fragment(), OnSpellClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val spellsViewModel =
-            ViewModelProvider(this)[SpellsViewModel::class.java]
+        val viewModelFactory = HPViewModelFactory(context = requireContext())
+        val viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[HPViewModel::class.java]
 
         val spellsRV: RecyclerView = binding.spellsRecyclerView
         spellsRV.layoutManager = LinearLayoutManager(requireContext())
         val spellsRvAdapter = SpellsRvAdapter(clickListener = this)
         spellsRV.adapter = spellsRvAdapter
 
-        spellsViewModel.spellsList.observe(viewLifecycleOwner) { spellsList ->
+        viewModel.spellsList.observe(viewLifecycleOwner) { spellsList ->
             spellsRvAdapter.setSpellsList(spellsList)
             spellsRvAdapter.notifyDataSetChanged()
         }

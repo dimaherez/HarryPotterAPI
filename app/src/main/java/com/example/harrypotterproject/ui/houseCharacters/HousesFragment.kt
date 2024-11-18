@@ -1,18 +1,22 @@
 package com.example.harrypotterproject.ui.houseCharacters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.harrypotterproject.databinding.FragmentHousesBinding
 import com.example.harrypotterproject.enums.House
+import com.example.harrypotterproject.ui.viewmodel.HPViewModel
+import com.example.harrypotterproject.ui.viewmodel.HPViewModelFactory
 
 class HousesFragment : Fragment() {
 
     private var _binding: FragmentHousesBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: HPViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,15 +30,19 @@ class HousesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.gryffindorIV.setOnClickListener { onHouseClick(House.GRYFFINDOR.name) }
-        binding.slytherinIV.setOnClickListener { onHouseClick(House.SLYTHERIN.name) }
-        binding.hufflepuffIV.setOnClickListener { onHouseClick(House.HUFFLEPUFF.name) }
-        binding.ravenclawIV.setOnClickListener { onHouseClick(House.RAVENCLAW.name) }
+        val viewModelFactory = HPViewModelFactory(context = requireContext())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[HPViewModel::class.java]
+
+        binding.gryffindorIV.setOnClickListener { onHouseClick(House.GRYFFINDOR) }
+        binding.slytherinIV.setOnClickListener { onHouseClick(House.SLYTHERIN) }
+        binding.hufflepuffIV.setOnClickListener { onHouseClick(House.HUFFLEPUFF) }
+        binding.ravenclawIV.setOnClickListener { onHouseClick(House.RAVENCLAW) }
     }
 
-    private fun onHouseClick(houseName: String) {
-        Log.d("MyLog", "onHouseClick clicked")
-        val dialog = HouseCharactersDialogFragment.newInstance(houseName)
+    private fun onHouseClick(house: House) {
+        viewModel.getHouseCharacters(house)
+        val dialog = HouseCharactersDialogFragment()
         dialog.show(childFragmentManager, "HouseCharactersDialogFragment")
     }
 

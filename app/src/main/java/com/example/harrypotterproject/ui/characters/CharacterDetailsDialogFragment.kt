@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.harrypotterproject.R
 import com.example.harrypotterproject.databinding.CharacterInfoDialogBinding
-import com.example.harrypotterproject.models.CharacterModel
-import com.google.gson.Gson
+import com.example.harrypotterproject.ui.viewmodel.HPViewModel
+import com.example.harrypotterproject.ui.viewmodel.HPViewModelFactory
 
 class CharacterDetailsDialogFragment : DialogFragment() {
     private var _binding: CharacterInfoDialogBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModel: HPViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,18 +31,23 @@ class CharacterDetailsDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val characterJson = arguments?.getString("character")
-        val character = Gson().fromJson(characterJson, CharacterModel::class.java)
+        val viewModelFactory = HPViewModelFactory(context = requireContext())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[HPViewModel::class.java]
 
-        setImageFromUrl(binding.characterImageView, character.image, requireContext())
-        binding.characterInfo.text = character.toString()
+
+        viewModel.selectedCharacter.observe(viewLifecycleOwner) {
+            setImageFromUrl(binding.characterImageView, it.image, requireContext())
+            binding.characterInfo.text = it.toString()
+
+        }
 
         binding.closeButton.setOnClickListener {
             dismiss() // Close the dialog
         }
 
         binding.swapHouseButton.setOnClickListener {
-            val dialog = SwapHouseDialogFragment.newInstance(character)
+            val dialog = SwapHouseDialogFragment.newInstance(viewModel.selectedCharacter.value!!)
             dialog.show(childFragmentManager, "SwapHouseDialogFragment")
         }
 
@@ -54,14 +62,5 @@ class CharacterDetailsDialogFragment : DialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(character: CharacterModel): CharacterDetailsDialogFragment {
-            val args = Bundle().apply { putString("character", Gson().toJson(character)) }
-            val fragment = CharacterDetailsDialogFragment()
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

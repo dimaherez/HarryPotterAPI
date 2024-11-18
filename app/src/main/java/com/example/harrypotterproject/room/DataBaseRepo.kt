@@ -13,6 +13,10 @@ class DatabaseRepo(private val characterDao: CharacterDao) {
         return characterDao.getAllCharactersLiveData()
     }
 
+    fun getCharacterById(id: String): CharacterModel {
+        return characterDao.getCharacterById(id)
+    }
+
     suspend fun insertAll(characters: List<CharacterModel>) {
         characterDao.insertAll(characters)
     }

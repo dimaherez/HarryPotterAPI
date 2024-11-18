@@ -10,7 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.harrypotterproject.databinding.FragmentSwapHouseBinding
 import com.example.harrypotterproject.enums.House
 import com.example.harrypotterproject.models.CharacterModel
-import com.example.harrypotterproject.ui.houseCharacters.HouseCharactersDialogFragment
+import com.example.harrypotterproject.ui.viewmodel.HPViewModel
+import com.example.harrypotterproject.ui.viewmodel.HPViewModelFactory
 import com.google.gson.Gson
 
 class SwapHouseDialogFragment : DialogFragment() {
@@ -18,7 +19,7 @@ class SwapHouseDialogFragment : DialogFragment() {
     private var _binding: FragmentSwapHouseBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var swapHouseViewModel: SwapHouseViewModel
+    private lateinit var viewModel: HPViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +33,9 @@ class SwapHouseDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val viewModelFactory = SwapHouseViewModelFactory(context = requireContext())
-        swapHouseViewModel =
-            ViewModelProvider(this, viewModelFactory)[SwapHouseViewModel::class.java]
+        val viewModelFactory = HPViewModelFactory(context = requireContext())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[HPViewModel::class.java]
 
         val characterJson = arguments?.getString("character")
         val character = Gson().fromJson(characterJson, CharacterModel::class.java)
@@ -54,15 +55,13 @@ class SwapHouseDialogFragment : DialogFragment() {
     }
 
     private fun onClick(character: CharacterModel, house: House) {
-        swapHouseViewModel.changeHouse(character, newHouse = house)
+        viewModel.changeHouse(character, newHouse = house)
         Toast.makeText(
             requireContext(),
             "${character.name}'s house changed to $house",
             Toast.LENGTH_LONG
         ).show()
 
-        CharactersFragment.refreshData()
-        HouseCharactersDialogFragment.refreshData()
         dismiss()
     }
 

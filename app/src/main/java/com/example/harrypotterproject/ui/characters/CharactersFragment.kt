@@ -15,18 +15,15 @@ import com.example.harrypotterproject.databinding.FragmentCharactersBinding
 import com.example.harrypotterproject.models.CharacterModel
 import com.example.harrypotterproject.models.SpellModel
 import com.example.harrypotterproject.recycleview.CharactersRvAdapter
+import com.example.harrypotterproject.ui.viewmodel.HPViewModel
+import com.example.harrypotterproject.ui.viewmodel.HPViewModelFactory
 
 class CharactersFragment : Fragment(), OnCharacterClickListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        lateinit var charactersViewModel: CharactersViewModel
-        fun refreshData() {
-            charactersViewModel.getCharacters()
-        }
-    }
+    private lateinit var viewModel: HPViewModel
 
 
     override fun onCreateView(
@@ -42,16 +39,17 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val viewModelFactory = CharactersViewModelFactory(context = requireContext())
-        charactersViewModel =
-            ViewModelProvider(this, viewModelFactory)[CharactersViewModel::class.java]
+        val viewModelFactory = HPViewModelFactory(context = requireContext())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[HPViewModel::class.java]
 
         val recyclerView: RecyclerView = view.findViewById(R.id.charactersRecycleView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2) // 2 columns in the grid
         val adapter = CharactersRvAdapter(clickListener = this)
         recyclerView.adapter = adapter
 
-        charactersViewModel.characters.observe(viewLifecycleOwner) { allCharacters ->
+
+        viewModel.characters.observe(viewLifecycleOwner) { allCharacters ->
             adapter.charactersList = allCharacters
             adapter.notifyDataSetChanged()
         }
@@ -69,7 +67,7 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
         binding.teachSpellButton.setOnClickListener {
             onTeachSpellClick(
                 adapter.selectedCharactersLiveData.value!!,
-                charactersViewModel.spellsList.value!!
+                viewModel.spellsList.value!!
             )
             adapter.deselectAll()
         }
@@ -81,20 +79,17 @@ class CharactersFragment : Fragment(), OnCharacterClickListener {
     }
 
     override fun onInfoButtonClick(character: CharacterModel) {
-        val dialog = CharacterDetailsDialogFragment.newInstance(character)
+        viewModel.getCharacterById(character.id)
+        val dialog = CharacterDetailsDialogFragment()
         dialog.show(childFragmentManager, "CharacterDetailsDialogFragment")
     }
 
     override fun onTeachSpellClick(characters: List<CharacterModel>, spells: List<SpellModel>) {
         val randomSpell = spells.random()
-        characters.forEach {
-            if (it.knownSpells == null) it.knownSpells = mutableListOf(randomSpell)
-            else it.knownSpells!!.add(randomSpell)
-        }
-        charactersViewModel.teachSpells(characters)
+        viewModel.teachSpell(characters, randomSpell)
         Toast.makeText(
             requireContext(),
-            "Selected characters know '${randomSpell.name}' spell now!",
+            "'${randomSpell.name}' learned!",
             Toast.LENGTH_LONG
         ).show()
     }
